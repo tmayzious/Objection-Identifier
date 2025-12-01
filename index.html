@@ -34,7 +34,7 @@
 
         /* Form Input Styles */
         label { display: block; font-weight: 600; margin-top: 10px; margin-bottom: 5px; color: #333; font-size: 0.9em; }
-        input[type="text"], textarea, select {
+        input[type="text"], input[type="email"], textarea, select { /* ⬅️ Added input[type="email"] */
             width: 100%;
             padding: 8px;
             margin-bottom: 15px;
@@ -81,14 +81,12 @@
         // --- Main Application Component ---
         const ObjectionTracker = () => {
             
-            // Hardcode the user name since it won't be passed.
-            const highspotUser = 'Anonymous / Unspecified'; 
-            
             // Survey State
+            const [userEmail, setUserEmail] = useState(''); // ⬅️ NEW STATE
             const [objectionText, setObjectionText] = useState('');
             const [accountName, setAccountName] = useState('');
             const [dealStage, setDealStage] = useState('Discovery');
-            const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
+            const [submitStatus, setSubmitStatus] = useState(null);
             const [isSubmitting, setIsSubmitting] = useState(false);
 
             const dealStages = ['Discovery', 'Qualification', 'Solutioning', 'Negotiation', 'Closing'];
@@ -96,7 +94,8 @@
             // --- Data Submission Logic ---
             const handleSubmitLogic = async (e) => {
                 e.preventDefault();
-                if (!objectionText.trim() || isSubmitting) {
+                // ⬅️ VALIDATION CHANGE: Requires Objection Text and Email
+                if (!objectionText.trim() || !userEmail.trim() || isSubmitting) {
                     setSubmitStatus('error');
                     return;
                 }
@@ -105,7 +104,7 @@
                 setSubmitStatus(null);
                 
                 const dataToSend = {
-                    highspotUser: highspotUser,
+                    userEmail: userEmail.trim(), // ⬅️ SENDING NEW FIELD
                     objectionText: objectionText.trim(),
                     dealStage: dealStage,
                     accountName: accountName.trim() || 'N/A',
@@ -118,16 +117,16 @@
                         mode: 'cors',
                         cache: 'no-cache',
                         headers: {
-                            'Content-Type': 'text/plain', // Use text/plain for Apps Script POST
+                            'Content-Type': 'text/plain',
                         },
                         body: JSON.stringify(dataToSend),
                     });
 
-                    // Apps Script always returns 200, so we check the JSON payload for success
                     const result = await response.json();
 
                     if (result.success) {
                         // Reset form and show success
+                        setUserEmail(''); // ⬅️ RESET NEW FIELD
                         setObjectionText('');
                         setAccountName('');
                         setDealStage('Discovery');
@@ -151,56 +150,68 @@
                 <div className="tracker-app">
                     <h2>📢 Field Objection Submission</h2>
                     <p className="description">
-                        Seller: **{highspotUser}** | Logging directly to Enablement's Google Sheet.
+                        Log client objections directly to the Enablement Google Sheet.
                     </p>
 
-                    <form onSubmit={handleSubmitLogic}>
-                        <label htmlFor="objectionText">1. What is the **exact objection** or question you heard?</label>
-                        <textarea
-                            id="objectionText"
-                            value={objectionText}
-                            onChange={(e) => setObjectionText(e.target.value)}
-                            placeholder="Example: 'Your competitor can deliver this feature faster and cheaper.'"
-                            required
-                        />
+                    {/* ⬅️ NEW EMAIL INPUT FIELD */}
+                    <label htmlFor="userEmail">1. Your Email Address</label>
+                    <input
+                        type="email"
+                        id="userEmail"
+                        value={userEmail}
+                        onChange={(e) => setUserEmail(e.target.value)}
+                        placeholder="your.name@company.com"
+                        required
+                    />
 
-                        <label htmlFor="dealStage">2. Deal Stage</label>
-                        <select
-                            id="dealStage"
-                            value={dealStage}
-                            onChange={(e) => setDealStage(e.target.value)}
-                        >
-                            {dealStages.map(stage => <option key={stage} value={stage}>{stage}</option>)}
-                        </select>
-                        
-                        <label htmlFor="accountName">3. Account Name (Optional)</label>
-                        <input
-                            type="text"
-                            id="accountName"
-                            value={accountName}
-                            onChange={(e) => setAccountName(e.target.value)}
-                            placeholder="e.g., Acme Corp"
-                        />
+                    <label htmlFor="objectionText">2. What is the **exact objection** or question you heard?</label>
+                    <textarea
+                        id="objectionText"
+                        value={objectionText}
+                        onChange={(e) => setObjectionText(e.target.value)}
+                        placeholder="Example: 'Your competitor can deliver this feature faster and cheaper.'"
+                        required
+                    />
 
-                        <button type="submit" className="submit-btn" disabled={isSubmitting}>
-                            {isSubmitting ? 'Submitting...' : 'Submit Objection to Google Sheet'}
-                        </button>
+                    <label htmlFor="dealStage">3. Deal Stage</label>
+                    <select
+                        id="dealStage"
+                        value={dealStage}
+                        onChange={(e) => setDealStage(e.target.value)}
+                    >
+                        {dealStages.map(stage => <option key={stage} value={stage}>{stage}</option>)}
+                    </select>
+                    
+                    <label htmlFor="accountName">4. Account Name (Optional)</label>
+                    <input
+                        type="text"
+                        id="accountName"
+                        value={accountName}
+                        onChange={(e) => setAccountName(e.target.value)}
+                        placeholder="e.g., Acme Corp"
+                    />
 
-                        {submitStatus === 'success' && (
-                            <div className="status-message success">✅ Success! Logged to Google Sheet.</div>
-                        )}
-                        {submitStatus === 'error' && (
-                            <div className="status-message error">🛑 Submission Error! Failed to log to Sheet.</div>
-                        )}
-                    </form>
-                </div>
-            );
-        };
+                    <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                        {isSubmitting ? 'Submitting...' : 'Submit Objection to Google Sheet'}
+                    </button>
+
+                    {submitStatus === 'success' && (
+                        <div className="status-message success">✅ Success! Logged to Google Sheet.</div>
+                    )}
+                    {submitStatus === 'error' && (
+                        <div className="status-message error">
+                            🛑 Submission Error! Please fill out the **Objection Text** and **Email Address**.
+                        </div>
+                    )}
+                </form>
+            </div>
+        );
+    };
 
 
-        const container = document.getElementById('root');
-        const root = ReactDOM.createRoot(container);
-        root.render(<ObjectionTracker />);
-    </script>
+    const container = document.getElementById('root');
+    const root = ReactDOM.createRoot(container);
+    root.render(<ObjectionTracker />);
+</script>
 </body>
 </html>
