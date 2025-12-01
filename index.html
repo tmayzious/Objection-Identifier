@@ -10,7 +10,7 @@
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
     <style>
-        /* General Compact Styles - Matched to previous tools */
+        /* General Compact Styles */
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding: 10px; background-color: #f7f9fc; }
         #root { width: 100%; height: 100%; }
         .tracker-app { 
@@ -18,12 +18,12 @@
             margin: 0 auto; 
             padding: 20px; 
             border: 1px solid #e0e6f0; 
-            border-radius: 8px; /* Consistent border radius */
+            border-radius: 8px;
             background: #ffffff; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Consistent subtle shadow */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         h2 { 
-            color: #007bff; /* Primary blue for headers */
+            color: #007bff;
             border-bottom: 2px solid #007bff; 
             padding-bottom: 5px; 
             margin-top: 0; 
@@ -31,70 +31,41 @@
             text-align: center; 
         }
         .description { margin-bottom: 15px; font-size: 0.9em; color: #555; font-style: italic; text-align: center; }
-        hr { border: 0; border-top: 1px dashed #eee; margin: 25px 0; } /* Consistent dashed HR */
 
-        /* Form Input Styles - Matched to previous tools */
-        label { display: block; font-weight: 600; margin-top: 10px; margin-bottom: 5px; color: #333; font-size: 0.9em; } /* Smaller label font */
+        /* Form Input Styles */
+        label { display: block; font-weight: 600; margin-top: 10px; margin-bottom: 5px; color: #333; font-size: 0.9em; }
         input[type="text"], textarea, select {
             width: 100%;
             padding: 8px;
             margin-bottom: 15px;
             border: 1px solid #ccc;
-            border-radius: 4px; /* Consistent border radius */
+            border-radius: 4px;
             box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Ensure font consistency */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         textarea { resize: vertical; min-height: 80px; }
 
-        /* Button Styles - Matched to previous tools */
+        /* Button Styles */
         .submit-btn {
-            background-color: #007bff; /* Primary blue for main action */
+            background-color: #007bff;
             color: white;
             padding: 10px 15px;
             border: none;
-            border-radius: 4px; /* Consistent border radius */
+            border-radius: 4px;
             cursor: pointer;
             font-size: 1em;
             transition: background-color 0.2s;
         }
-        .submit-btn:hover:not(:disabled) { background-color: #0056b3; } /* Darker blue on hover */
+        .submit-btn:hover:not(:disabled) { background-color: #0056b3; }
         .submit-btn:disabled { 
-            background-color: #a0c3e8; /* Light blue when disabled */
+            background-color: #a0c3e8;
             cursor: not-allowed;
         }
 
-        /* Status Message - Consistent color for success */
+        /* Status Message */
         .status-message { padding: 10px; margin-top: 15px; border-radius: 4px; font-weight: bold; }
         .success { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; }
-        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; } /* Error style added */
-
-
-        /* Admin/Data Retrieval Styles - Matched to previous tools */
-        .admin-section { margin-top: 30px; padding: 15px; border: 1px solid #e0e6f0; border-radius: 6px; background-color: #e9f5ff; } /* Lighter border, no dash */
-        .admin-section h3 { color: #007bff; border-bottom: 1px solid #007bff; padding-bottom: 5px; margin-bottom: 10px; font-size: 1.2em; }
-        .data-button { 
-            background-color: #007bff; /* Primary blue */
-            color: white; 
-            padding: 8px 12px; 
-            border: none; 
-            border-radius: 4px; /* Consistent border radius */
-            cursor: pointer; 
-            margin-right: 10px; 
-            margin-bottom: 10px; /* Space out buttons */
-            transition: background-color 0.2s;
-        }
-        .data-button:hover { background-color: #0056b3; }
-
-        /* Specific admin button colors */
-        .data-button.export { background-color: #28a745; } /* Green for export */
-        .data-button.export:hover { background-color: #218838; }
-        .data-button.toggle-data { background-color: #ffc107; color: #343a40; } /* Yellow for toggle data */
-        .data-button.toggle-data:hover { background-color: #e0a800; }
-        .data-button.clear-data { background-color: #dc3545; } /* Red for destructive action */
-        .data-button.clear-data:hover { background-color: #c82333; }
-
-        .data-count { font-weight: bold; color: #007bff; margin-left: 10px; font-size: 0.9em; }
-        .data-output { margin-top: 10px; background-color: #f8fbfc; padding: 10px; border: 1px solid #a8d6ff; white-space: pre-wrap; font-size: 0.75em; max-height: 200px; overflow-y: auto; border-radius: 4px; } /* Lighter background, blue border */
+        .error { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; }
     </style>
 </head>
 <body>
@@ -102,53 +73,16 @@
     <div id="root"></div>
 
     <script type="text/babel">
-        const { useState, useEffect } = React;
-        const STORAGE_KEY = 'highspot_objections_data';
+        const { useState } = React;
         
-        // *** 🚀 YOUR GOOGLE APPS SCRIPT WEB APP URL IS NOW HERE 🚀 ***
+        // 🚀 YOUR GOOGLE APPS SCRIPT WEB APP URL IS HERE 🚀
         const SCRIPT_URL = 'https://script.google.com/a/macros/highspot.com/s/AKfycbz-CHZZ_vz-Yrr3HZwK8g4h3ixS6v5hlKkbCYHSHq3-3g6I1I35IgL2Kl2DSCi05lSh/exec';
         
-        // --- Helper: Load Data from LocalStorage (for Admin/Backup) ---
-        const loadObjections = () => {
-            try {
-                const data = localStorage.getItem(STORAGE_KEY);
-                return data ? JSON.parse(data) : [];
-            } catch (e) {
-                console.error("Could not load data from localStorage:", e);
-                return [];
-            }
-        };
-
-        // --- Handlers (Full definitions for clarity) ---
-
-        // Export Handler (Local Backup)
-        const handleExport = () => {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(loadObjections(), null, 2));
-            const downloadAnchorNode = document.createElement('a');
-            downloadAnchorNode.setAttribute("href", dataStr);
-            downloadAnchorNode.setAttribute("download", `Objections_Export_${new Date().toISOString().slice(0, 10)}.json`);
-            document.body.appendChild(downloadAnchorNode);
-            downloadAnchorNode.click();
-            downloadAnchorNode.remove();
-        };
-
-        // Clear Data Handler (Local Backup)
-        const handleClearData = (setObjectionsData, setShowData) => {
-            if (window.confirm("ARE YOU SURE? This will permanently delete ALL saved objections from this browser.")) {
-                localStorage.removeItem(STORAGE_KEY);
-                setObjectionsData([]);
-                setShowData(false);
-            }
-        };
-
         // --- Main Application Component ---
-        const ObjectionTrackerWithAdmin = () => {
-            // Highspot context check - attempts to get user info 
-            const [highspotUser, setHighspotUser] = useState(
-                window.Highspot && window.Highspot.context && window.Highspot.context.user 
-                ? window.Highspot.context.user.displayName 
-                : (new URLSearchParams(window.location.search).get('user') || 'Unknown Seller')
-            );
+        const ObjectionTracker = () => {
+            
+            // Hardcode the user name since it won't be passed.
+            const highspotUser = 'Anonymous / Unspecified'; 
             
             // Survey State
             const [objectionText, setObjectionText] = useState('');
@@ -156,11 +90,6 @@
             const [dealStage, setDealStage] = useState('Discovery');
             const [submitStatus, setSubmitStatus] = useState(null); // 'success', 'error', or null
             const [isSubmitting, setIsSubmitting] = useState(false);
-
-            // Admin State (for local backup viewing)
-            const [showAdmin, setShowAdmin] = useState(false);
-            const [objectionsData, setObjectionsData] = useState(loadObjections);
-            const [showData, setShowData] = useState(false);
 
             const dealStages = ['Discovery', 'Qualification', 'Solutioning', 'Negotiation', 'Closing'];
 
@@ -175,37 +104,102 @@
                 setIsSubmitting(true);
                 setSubmitStatus(null);
                 
-                const newObjection = {
-                    id: Date.now(),
-                    text: objectionText.trim(),
-                    account: accountName.trim() || 'N/A',
-                    stage: dealStage,
-                    timestamp: new Date().toLocaleString(),
-                };
-
                 const dataToSend = {
                     highspotUser: highspotUser,
-                    objectionText: newObjection.text,
-                    dealStage: newObjection.stage,
-                    accountName: newObjection.account,
+                    objectionText: objectionText.trim(),
+                    dealStage: dealStage,
+                    accountName: accountName.trim() || 'N/A',
                 };
 
                 try {
                     // 1. Send to Google Apps Script Web App
                     const response = await fetch(SCRIPT_URL, {
                         method: 'POST',
-                        mode: 'cors', // Important for cross-origin requests
+                        mode: 'cors',
                         cache: 'no-cache',
                         headers: {
-                            'Content-Type': 'text/plain', // Use text/plain to avoid preflight issues with Apps Script, which parses JSON string from body
+                            'Content-Type': 'text/plain', // Use text/plain for Apps Script POST
                         },
-                        body: JSON.stringify(dataToSend), // Send JSON data as a string in the body
+                        body: JSON.stringify(dataToSend),
                     });
 
-                    // Apps Script always returns 200, so we check the JSON payload for success
                     const result = await response.json();
 
                     if (result.success) {
-                        // Success: Save to Local Storage (Backup)
-                        const updatedData = [...objectionsData, newObjection];
-                        localStorage.setItem(STORAGE_KEY, JSON.stringify
+                        // Reset form and show success
+                        setObjectionText('');
+                        setAccountName('');
+                        setDealStage('Discovery');
+                        setSubmitStatus('success');
+                    } else {
+                        console.error("Script Error:", result.message);
+                        setSubmitStatus('error');
+                    }
+
+                } catch (error) {
+                    console.error("Submission failed:", error);
+                    setSubmitStatus('error');
+                } finally {
+                    setIsSubmitting(false);
+                    setTimeout(() => setSubmitStatus(null), 4000);
+                }
+            };
+
+            // --- Render ---
+            return (
+                <div className="tracker-app">
+                    <h2>📢 Field Objection Submission</h2>
+                    <p className="description">
+                        Seller: **{highspotUser}** | Logging directly to Enablement's Google Sheet.
+                    </p>
+
+                    <form onSubmit={handleSubmitLogic}>
+                        <label htmlFor="objectionText">1. What is the **exact objection** or question you heard?</label>
+                        <textarea
+                            id="objectionText"
+                            value={objectionText}
+                            onChange={(e) => setObjectionText(e.target.value)}
+                            placeholder="Example: 'Your competitor can deliver this feature faster and cheaper.'"
+                            required
+                        />
+
+                        <label htmlFor="dealStage">2. Deal Stage</label>
+                        <select
+                            id="dealStage"
+                            value={dealStage}
+                            onChange={(e) => setDealStage(e.target.value)}
+                        >
+                            {dealStages.map(stage => <option key={stage} value={stage}>{stage}</option>)}
+                        </select>
+                        
+                        <label htmlFor="accountName">3. Account Name (Optional)</label>
+                        <input
+                            type="text"
+                            id="accountName"
+                            value={accountName}
+                            onChange={(e) => setAccountName(e.target.value)}
+                            placeholder="e.g., Acme Corp"
+                        />
+
+                        <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                            {isSubmitting ? 'Submitting...' : 'Submit Objection to Google Sheet'}
+                        </button>
+
+                        {submitStatus === 'success' && (
+                            <div className="status-message success">✅ Success! Logged to Google Sheet.</div>
+                        )}
+                        {submitStatus === 'error' && (
+                            <div className="status-message error">🛑 Submission Error! Failed to log to Sheet.</div>
+                        )}
+                    </form>
+                </div>
+            );
+        };
+
+
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
+        root.render(<ObjectionTracker />);
+    </script>
+</body>
+</html>
