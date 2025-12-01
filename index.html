@@ -82,7 +82,7 @@
         const ObjectionTracker = () => {
             
             // Survey State
-            const [userEmail, setUserEmail] = useState(''); // NEW STATE
+            const [userEmail, setUserEmail] = useState('');
             const [objectionText, setObjectionText] = useState('');
             const [accountName, setAccountName] = useState('');
             const [dealStage, setDealStage] = useState('Discovery');
@@ -104,7 +104,7 @@
                 setSubmitStatus(null);
                 
                 const dataToSend = {
-                    userEmail: userEmail.trim(), // SENDING NEW FIELD
+                    userEmail: userEmail.trim(),
                     objectionText: objectionText.trim(),
                     dealStage: dealStage,
                     accountName: accountName.trim() || 'N/A',
@@ -117,11 +117,12 @@
                         mode: 'cors',
                         cache: 'no-cache',
                         headers: {
-                            'Content-Type': 'text/plain', // Use text/plain for Apps Script POST
+                            'Content-Type': 'text/plain',
                         },
                         body: JSON.stringify(dataToSend),
                     });
 
+                    // Apps Script always returns 200, so we check the JSON payload for success
                     const result = await response.json();
 
                     if (result.success) {
@@ -154,7 +155,7 @@
                     </p>
 
                     <form onSubmit={handleSubmitLogic}>
-                        {/* ⬅️ THIS IS THE NEW EMAIL INPUT FIELD */}
+                        {/* 1. EMAIL INPUT FIELD */}
                         <label htmlFor="userEmail">1. Your Email Address</label>
                         <input
                             type="email"
@@ -165,6 +166,7 @@
                             required
                         />
                         
+                        {/* 2. OBJECTION TEXTAREA */}
                         <label htmlFor="objectionText">2. What is the **exact objection** or question you heard?</label>
                         <textarea
                             id="objectionText"
@@ -174,6 +176,7 @@
                             required
                         />
 
+                        {/* 3. DEAL STAGE SELECT */}
                         <label htmlFor="dealStage">3. Deal Stage</label>
                         <select
                             id="dealStage"
@@ -183,6 +186,7 @@
                             {dealStages.map(stage => <option key={stage} value={stage}>{stage}</option>)}
                         </select>
                         
+                        {/* 4. ACCOUNT NAME INPUT */}
                         <label htmlFor="accountName">4. Account Name (Optional)</label>
                         <input
                             type="text"
