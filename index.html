@@ -123,6 +123,7 @@
                         body: JSON.stringify(dataToSend),
                     });
 
+                    // Apps Script always returns 200, so we check the JSON payload for success
                     const result = await response.json();
 
                     if (result.success) {
